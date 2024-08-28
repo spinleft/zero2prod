@@ -51,6 +51,8 @@ jobs:
           sudo apt-get install libpq-dev -y
           SKIP_DOCKER=true ./scripts/init_db.sh
       - name: Check sqlx-data.json is up-to-date
+        env:
+          DATABASE_URL: postgres://zero2prod:zero2prodpassword@localhost:5432/newsletter
         run: |
           cargo sqlx prepare --workspace --check
       - name: Run tests
