@@ -56,7 +56,9 @@ jobs:
         run: |
           cargo sqlx prepare --workspace --check
       - name: Run tests
-        run: APP_DATABASE__HOST=localhost cargo test
+        env:
+          APP_DATABASE__HOST: "localhost"
+        run: cargo test
 
   fmt:
     name: Rustfmt
