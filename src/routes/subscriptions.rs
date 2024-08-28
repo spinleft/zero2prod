@@ -1,13 +1,3 @@
-/*
- * @Author: spinleft spinleftgit@gmail.com
- * @Date: 2024-08-20 08:12:56
- * @LastEditors: spinleft spinleftgit@gmail.com
- * @LastEditTime: 2024-08-23 04:02:11
- * @FilePath: \zero2prod\src\routes\subscriptions.rs
- * @Description:
- *
- * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved.
- */
 use actix_web::{web, HttpResponse};
 use chrono::Utc;
 use sqlx::PgPool;
@@ -30,7 +20,7 @@ pub struct FormData {
 pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> HttpResponse {
     match insert_subscriber(&pool, &form).await {
         Ok(_) => HttpResponse::Ok().finish(),
-        Err(e_) => HttpResponse::InternalServerError().finish(),
+        Err(_) => HttpResponse::InternalServerError().finish(),
     }
 }
 
