@@ -2,7 +2,7 @@
  * @Author: spinleft spinleftgit@gmail.com
  * @Date: 2024-08-20 08:12:56
  * @LastEditors: spinleft spinleftgit@gmail.com
- * @LastEditTime: 2024-12-17 00:40:08
+ * @LastEditTime: 2024-12-17 00:51:24
  * @FilePath: \zero2prod\src\routes\subscriptions.rs
  * @Description:
  *
@@ -15,7 +15,7 @@ use actix_web::{web, HttpResponse};
 use chrono::Utc;
 use rand::distributions::Alphanumeric;
 use rand::{thread_rng, Rng};
-use sqlx::{PgPool, Transaction, Executor};
+use sqlx::{Executor, PgPool, Transaction};
 use uuid::Uuid;
 
 #[derive(serde::Deserialize)]
@@ -130,9 +130,7 @@ pub async fn insert_subscriber(
         new_subscriber.name.as_ref(),
         Utc::now()
     );
-    transaction.execute(query)
-    .await
-    .map_err(|e| {
+    transaction.execute(query).await.map_err(|e| {
         tracing::error!("Failed to execute query: {:?}", e);
         e
     })?;
@@ -161,9 +159,7 @@ pub async fn store_token(
         subscription_token,
         subscriber_id
     );
-    transaction.execute(query)
-    .await
-    .map_err(|e| {
+    transaction.execute(query).await.map_err(|e| {
         tracing::error!("Failed to execute query: {:?}", e);
         e
     })?;

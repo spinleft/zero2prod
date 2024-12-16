@@ -2,11 +2,11 @@
  * @Author: spinleft spinleftgit@gmail.com
  * @Date: 2024-12-15 20:25:05
  * @LastEditors: spinleft spinleftgit@gmail.com
- * @LastEditTime: 2024-12-15 21:54:45
+ * @LastEditTime: 2024-12-17 00:51:53
  * @FilePath: \zero2prod\tests\api\health_check.rs
- * @Description: 
- * 
- * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved. 
+ * @Description:
+ *
+ * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved.
  */
 use crate::helpers::spawn_app;
 
