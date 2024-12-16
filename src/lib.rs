@@ -9,6 +9,8 @@
  * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved.
  */
 pub mod configuration;
+pub mod domain;
+pub mod email_client;
 pub mod routes;
 pub mod startup;
 pub mod telemetry;

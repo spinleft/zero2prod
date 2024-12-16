@@ -2,16 +2,14 @@
  * @Author: spinleft spinleftgit@gmail.com
  * @Date: 2024-08-19 19:51:56
  * @LastEditors: spinleft spinleftgit@gmail.com
- * @LastEditTime: 2024-08-28 08:58:41
+ * @LastEditTime: 2024-12-15 21:36:30
  * @FilePath: \zero2prod\src\main.rs
  * @Description:
  *
  * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved.
  */
-use sqlx::postgres::PgPoolOptions;
-use std::net::TcpListener;
 use zero2prod::configuration::get_configuration;
-use zero2prod::startup::run;
+use zero2prod::startup::Application;
 use zero2prod::telemetry::{get_subscriber, init_subscriber};
 
 #[tokio::main]
@@ -20,12 +18,7 @@ async fn main() -> Result<(), std::io::Error> {
     init_subscriber(subscriber);
 
     let configuration = get_configuration().expect("Failed to read configuration.");
-    let connection_pool = PgPoolOptions::new().connect_lazy_with(configuration.database.with_db());
-
-    let address = format!(
-        "{}:{}",
-        configuration.application.host, configuration.application.port
-    );
-    let listener = TcpListener::bind(address)?;
-    run(listener, connection_pool)?.await
+    let application = Application::build(configuration).await?;
+    application.run_until_stopped().await?;
+    Ok(())
 }
