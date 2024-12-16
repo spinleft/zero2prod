@@ -2,7 +2,7 @@
  * @Author: spinleft spinleftgit@gmail.com
  * @Date: 2024-12-15 20:25:05
  * @LastEditors: spinleft spinleftgit@gmail.com
- * @LastEditTime: 2024-12-16 23:54:22
+ * @LastEditTime: 2024-12-17 02:01:10
  * @FilePath: \zero2prod\tests\api\helpers.rs
  * @Description:
  *
@@ -109,9 +109,9 @@ pub async fn spawn_app() -> TestApp {
 async fn configure_database(config: &DatabaseSettings) -> PgPool {
     // Create database
     let maintenance_settings = DatabaseSettings {
-        database_name: "newsletter".to_string(),
-        username: "zero2prod".to_string(),
-        password: Secret::new("zero2prodpassword".to_string()),
+        database_name: "postgres".to_string(),
+        username: "postgres".to_string(),
+        password: Secret::new("password".to_string()),
         ..config.clone()
     };
     let mut connection = PgConnection::connect_with(&maintenance_settings.connect_options())
