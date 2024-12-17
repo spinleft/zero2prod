@@ -152,7 +152,7 @@ pub async fn store_token(
     transaction
         .execute(query)
         .await
-        .map_err(StoreTokenError);
+        .map_err(StoreTokenError)?;
     Ok(())
 }
 
