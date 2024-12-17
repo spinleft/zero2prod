@@ -2,7 +2,7 @@
  * @Author: spinleft spinleftgit@gmail.com
  * @Date: 2024-08-20 08:12:56
  * @LastEditors: spinleft spinleftgit@gmail.com
- * @LastEditTime: 2024-12-18 01:17:46
+ * @LastEditTime: 2024-12-18 01:23:16
  * @FilePath: \zero2prod\src\routes\subscriptions.rs
  * @Description:
  *
@@ -123,7 +123,7 @@ pub async fn insert_subscriber(
         new_subscriber.name.as_ref(),
         Utc::now()
     );
-    transaction.execute(query).await.map_err(|e| e)?;
+    transaction.execute(query).await?;
     Ok(subscriber_id)
 }
 
@@ -152,7 +152,7 @@ pub async fn store_token(
     transaction
         .execute(query)
         .await
-        .map_err(|e| StoreTokenError(e))?;
+        .map_err(StoreTokenError);
     Ok(())
 }
 
