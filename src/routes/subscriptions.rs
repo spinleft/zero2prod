@@ -2,7 +2,7 @@
  * @Author: spinleft spinleftgit@gmail.com
  * @Date: 2024-08-20 08:12:56
  * @LastEditors: spinleft spinleftgit@gmail.com
- * @LastEditTime: 2024-12-18 01:23:16
+ * @LastEditTime: 2024-12-18 01:27:11
  * @FilePath: \zero2prod\src\routes\subscriptions.rs
  * @Description:
  *
@@ -149,10 +149,7 @@ pub async fn store_token(
         subscription_token,
         subscriber_id
     );
-    transaction
-        .execute(query)
-        .await
-        .map_err(StoreTokenError)?;
+    transaction.execute(query).await.map_err(StoreTokenError)?;
     Ok(())
 }
 
