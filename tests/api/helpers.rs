@@ -2,7 +2,7 @@
  * @Author: spinleft spinleftgit@gmail.com
  * @Date: 2024-12-15 20:25:05
  * @LastEditors: spinleft spinleftgit@gmail.com
- * @LastEditTime: 2024-12-17 02:01:10
+ * @LastEditTime: 2024-12-19 00:13:03
  * @FilePath: \zero2prod\tests\api\helpers.rs
  * @Description:
  *
@@ -74,6 +74,15 @@ impl TestApp {
         let html = get_link(&body["HtmlBody"].as_str().unwrap());
         let plain_text = get_link(&body["TextBody"].as_str().unwrap());
         ConfirmationLinks { html, plain_text }
+    }
+
+    pub async fn post_newsletters(&self, body: serde_json::Value) -> reqwest::Response {
+        reqwest::Client::new()
+            .post(&format!("{}/newsletters", &self.address))
+            .json(&body)
+            .send()
+            .await
+            .expect("Failed to execute request.")
     }
 }
 
