@@ -2,7 +2,7 @@
  * @Author: spinleft spinleftgit@gmail.com
  * @Date: 2024-12-16 00:59:28
  * @LastEditors: spinleft spinleftgit@gmail.com
- * @LastEditTime: 2024-12-17 00:20:37
+ * @LastEditTime: 2024-12-22 01:16:17
  * @FilePath: \zero2prod\src\routes\subscriptions_confirm.rs
  * @Description:
  *

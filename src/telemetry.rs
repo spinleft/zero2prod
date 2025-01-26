@@ -2,12 +2,13 @@
  * @Author: spinleft spinleftgit@gmail.com
  * @Date: 2024-08-23 02:30:22
  * @LastEditors: spinleft spinleftgit@gmail.com
- * @LastEditTime: 2024-08-23 03:30:01
+ * @LastEditTime: 2024-12-21 20:47:06
  * @FilePath: \zero2prod\src\telemetry.rs
  * @Description:
  *
  * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved.
  */
+use tokio::task::JoinHandle;
 use tracing::subscriber::set_global_default;
 use tracing::Subscriber;
 use tracing_bunyan_formatter::{BunyanFormattingLayer, JsonStorageLayer};
@@ -35,4 +36,13 @@ where
 pub fn init_subscriber(subscriber: impl Subscriber + Send + Sync) {
     LogTracer::init().expect("Failed to set logger.");
     set_global_default(subscriber).expect("Failed to set subscriber.");
+}
+
+pub fn spawn_blocking_with_tracing<F, R>(f: F) -> JoinHandle<R>
+where
+    F: FnOnce() -> R + Send + 'static,
+    R: Send + 'static,
+{
+    let current_span = tracing::Span::current();
+    tokio::task::spawn_blocking(move || current_span.in_scope(f))
 }
