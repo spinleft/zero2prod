@@ -2,7 +2,7 @@
  * @Author: spinleft spinleftgit@gmail.com
  * @Date: 2024-12-18 18:58:12
  * @LastEditors: spinleft spinleftgit@gmail.com
- * @LastEditTime: 2025-10-15 15:21:35
+ * @LastEditTime: 2025-10-15 15:31:22
  * @FilePath: \zero2prod\src\routes\newsletter.rs
  * @Description:
  *
@@ -81,7 +81,7 @@ struct ConfirmedSubscriber {
 }
 
 #[tracing::instrument(name = "Get confirmed subscribers", skip(pool))]
-pub async fn get_confirmed_subscribers(
+async fn get_confirmed_subscribers(
     pool: &PgPool,
 ) -> Result<Vec<Result<ConfirmedSubscriber, anyhow::Error>>, anyhow::Error> {
     struct Row {
