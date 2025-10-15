@@ -1,5 +1,25 @@
 /*
  * @Author: spinleft spinleftgit@gmail.com
+ * @Date: 2024-12-17 02:37:18
+ * @LastEditors: spinleft spinleftgit@gmail.com
+ * @LastEditTime: 2025-10-15 13:07:02
+ * @FilePath: \zero2prod\tests\api\helpers.rs
+ * @Description:
+ *
+ * Copyright (c) 2025 by ${git_name_email}, All Rights Reserved.
+ */
+/*
+ * @Author: spinleft spinleftgit@gmail.com
+ * @Date: 2024-12-17 02:37:18
+ * @LastEditors: spinleft spinleftgit@gmail.com
+ * @LastEditTime: 2025-10-14 12:20:16
+ * @FilePath: \zero2prod\tests\api\helpers.rs
+ * @Description:
+ *
+ * Copyright (c) 2025 by ${git_name_email}, All Rights Reserved.
+ */
+/*
+ * @Author: spinleft spinleftgit@gmail.com
  * @Date: 2024-12-15 20:25:05
  * @LastEditors: spinleft spinleftgit@gmail.com
  * @LastEditTime: 2024-12-25 19:09:04
@@ -30,7 +50,7 @@ impl TestUser {
         Self {
             user_id: Uuid::new_v4(),
             username: Uuid::new_v4().to_string(),
-            password: Uuid::new_v4().to_string(),
+            password: "everythinghastostartsomewhere".into(),
         }
     }
 
@@ -44,6 +64,7 @@ impl TestUser {
         .hash_password(self.password.as_bytes(), &salt)
         .unwrap()
         .to_string();
+        dbg!(&password_hash);
         sqlx::query!(
             r#"
             INSERT INTO users (user_id, username, password_hash)
@@ -189,6 +210,50 @@ impl TestApp {
         let html = get_link(&body["HtmlBody"].as_str().unwrap());
         let plain_text = get_link(&body["TextBody"].as_str().unwrap());
         ConfirmationLinks { html, plain_text }
+    }
+
+    pub async fn get_admin_dashboard(&self) -> reqwest::Response {
+        self.api_client
+            .get(&format!("{}/admin/dashboard", &self.address))
+            .send()
+            .await
+            .expect("Failed to execute request.")
+    }
+
+    pub async fn get_admin_dashboard_html(&self) -> String {
+        self.get_admin_dashboard().await.text().await.unwrap()
+    }
+
+    pub async fn get_change_password(&self) -> reqwest::Response {
+        self.api_client
+            .get(&format!("{}/admin/password", &self.address))
+            .send()
+            .await
+            .expect("Failed to execute request.")
+    }
+
+    pub async fn post_change_password<Body>(&self, body: &Body) -> reqwest::Response
+    where
+        Body: serde::Serialize,
+    {
+        self.api_client
+            .post(&format!("{}/admin/password", &self.address))
+            .form(body)
+            .send()
+            .await
+            .expect("Failed to execute request.")
+    }
+
+    pub async fn get_change_password_html(&self) -> String {
+        self.get_change_password().await.text().await.unwrap()
+    }
+
+    pub async fn post_logout(&self) -> reqwest::Response {
+        self.api_client
+            .post(&format!("{}/admin/logout", &self.address))
+            .send()
+            .await
+            .expect("Failed to execute request.")
     }
 }
 

@@ -2,7 +2,7 @@
  * @Author: spinleft spinleftgit@gmail.com
  * @Date: 2024-12-18 18:58:12
  * @LastEditors: spinleft spinleftgit@gmail.com
- * @LastEditTime: 2024-12-22 01:19:44
+ * @LastEditTime: 2025-10-15 15:21:35
  * @FilePath: \zero2prod\src\routes\newsletter.rs
  * @Description:
  *
@@ -126,7 +126,7 @@ pub async fn publish_newsletter(
             AuthError::InvalidCredentials(_) => PublishError::AuthError(e.into()),
             AuthError::UnexpectedError(_) => PublishError::UnexpectedError(e.into()),
         })?;
-    tracing::Span::current().record("user_id", &tracing::field::display(&user_id));
+    tracing::Span::current().record("user_id", tracing::field::display(&user_id));
     let subscribers = get_confirmed_subscribers(&pool).await?;
     for subscriber in subscribers {
         match subscriber {
