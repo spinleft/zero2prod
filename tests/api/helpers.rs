@@ -8,26 +8,6 @@
  *
  * Copyright (c) 2025 by ${git_name_email}, All Rights Reserved.
  */
-/*
- * @Author: spinleft spinleftgit@gmail.com
- * @Date: 2024-12-17 02:37:18
- * @LastEditors: spinleft spinleftgit@gmail.com
- * @LastEditTime: 2025-10-14 12:20:16
- * @FilePath: \zero2prod\tests\api\helpers.rs
- * @Description:
- *
- * Copyright (c) 2025 by ${git_name_email}, All Rights Reserved.
- */
-/*
- * @Author: spinleft spinleftgit@gmail.com
- * @Date: 2024-12-15 20:25:05
- * @LastEditors: spinleft spinleftgit@gmail.com
- * @LastEditTime: 2024-12-25 19:09:04
- * @FilePath: \zero2prod\tests\api\helpers.rs
- * @Description:
- *
- * Copyright (c) 2024 by ${git_name_email}, All Rights Reserved.
- */
 use argon2::password_hash::SaltString;
 use argon2::{Algorithm, Argon2, Params, PasswordHasher, Version};
 use once_cell::sync::Lazy;
@@ -36,6 +16,8 @@ use sqlx::{Connection, Executor, PgConnection, PgPool};
 use uuid::Uuid;
 use wiremock::MockServer;
 use zero2prod::configuration::{get_configuration, DatabaseSettings};
+use zero2prod::email_client::EmailClient;
+use zero2prod::issue_delivery_worker::{try_execute_task, ExecutionOutcome};
 use zero2prod::startup::{get_connection_pool, Application};
 use zero2prod::telemetry::{get_subscriber, init_subscriber};
 
@@ -113,6 +95,7 @@ pub struct TestApp {
     pub email_server: MockServer,
     pub test_user: TestUser,
     pub api_client: reqwest::Client,
+    pub email_client: EmailClient,
 }
 
 pub async fn spawn_app() -> TestApp {
@@ -148,12 +131,25 @@ pub async fn spawn_app() -> TestApp {
         email_server,
         test_user: TestUser::generate(),
         api_client: client,
+        email_client: configuration.email_client.client(),
     };
     test_app.test_user.store(&test_app.db_pool).await;
     test_app
 }
 
 impl TestApp {
+    pub async fn dispatch_all_pending_emails(&self) {
+        loop {
+            if let ExecutionOutcome::EmptyQueue =
+                try_execute_task(&self.db_pool, &self.email_client)
+                    .await
+                    .unwrap()
+            {
+                break;
+            }
+        }
+    }
+
     pub async fn post_subscriptions(&self, body: String) -> reqwest::Response {
         self.api_client
             .post(&format!("{}/subscriptions", &self.address))

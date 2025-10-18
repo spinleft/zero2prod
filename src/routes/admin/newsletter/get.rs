@@ -2,8 +2,8 @@
  * @Author: spinleft spinleftgit@gmail.com
  * @Date: 2025-10-15 19:06:20
  * @LastEditors: spinleft spinleftgit@gmail.com
- * @LastEditTime: 2025-10-15 19:14:02
- * @FilePath: \zero2prod\src\routes\admin\newsletter.rs\get.rs
+ * @LastEditTime: 2025-10-16 22:28:46
+ * @FilePath: \zero2prod\src\routes\admin\newsletter\get.rs
  * @Description:
  *
  * Copyright (c) 2025 by ${git_name_email}, All Rights Reserved.
@@ -21,6 +21,7 @@ pub async fn publish_newsletter_form(
         writeln!(msg_html, "<p><i>{}</i></p>", m.content()).unwrap();
     }
 
+    let idempotency_key = uuid::Uuid::new_v4();
     Ok(HttpResponse::Ok()
         .content_type(ContentType::html())
         .body(format!(
@@ -59,6 +60,7 @@ pub async fn publish_newsletter_form(
             ></textarea>
         </label>
         <br>
+        <input hidden type="text" name="idempotency_key" value="{idempotency_key}">
         <button type="submit">Publish</button>
     </form>
     <p><a href="/admin/dashboard">&lt;- Back</a></p>
